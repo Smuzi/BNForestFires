@@ -1,9 +1,7 @@
-import sys, math, calendar
+import sys, math
 import csv
 from time import strptime
-from scipy import cluster
-from numpy.random import choice as ch
-from dataStructures import Graph, Node
+from dataStructures import Graph
 from decimal import Decimal
 nodes = ['X','Y','month','day','FFMC','DMC','DC','ISI','temp','RH','wind','rain','area']
 days = {'mon':1, 'tue':2, 'wed':3, 'thu':4, 'fri':5, 'sat':6, 'sun':7}
@@ -23,6 +21,7 @@ def createSimpleGraph(G):
 		parentsToNode = list(csv.reader(f))
 	for ptn in parentsToNode:
 		ptn = [v.strip() for v in ptn]
+		print(ptn)
 		G.addParentsToNode(ptn.pop(0), ptn)
 
 noParents = lambda n: len(n.parents) == 0
@@ -87,6 +86,7 @@ def parseAux(rawData, dict):
 
 def parseData(rawData, priors):
 	rawData = rawData.split('\n')
+	nodes = rawData.pop(0).split(',')
 	rawPriors = priors.split('\n')
 	parseAux(rawData, dataDict)
 	parseAux(rawPriors, priorsDict)
@@ -108,17 +108,20 @@ def changeGraph(G):
 			for l in line:
 				G.addParentsToNode(l, node)
 
-def printGraph(G):
-	print("\nBEFORE CHANGES:\n")
+def printGraphsAux(G):
 	for node in G.nodes:
 		print(node.name, "parents:", [n.name for n in node.parents])
+	print('\nGraph Score = 10^{}'.format(float(getGraphScore(G))))
+
+def printGraphs(G):
+	print("\nBEFORE CHANGES:\n")
+	printGraphsAux(G)
 	changeGraph(G)
 	print("\nAFTER CHANGES:\n")
-	for node in G.nodes:
-		print(node.name, "parents:", [n.name for n in node.parents])
+	printGraphsAux(G)
 
 if __name__ == '__main__':
-	if len(sys.argv)<4:
+	if len(sys.argv) < 5:
 		print("usage: program.py dataset.csv priors.csv parents.csv changes.csv")
 		sys.exit()
 	data = open(sys.argv[1], "r").read()
@@ -129,9 +132,7 @@ if __name__ == '__main__':
 	dataDict_Q = G.updateQuantizedDict(dataDict)
 	priors_Q = G.updateQuantizedDict(priorsDict)
 	createSimpleGraph(G)
-	for node in G.nodes:
-		print(node.name, "priors:", node.prior)
-	oldScore = getGraphScore(G)
-	print("Graph Score =", oldScore)
-	printGraph(G)
-	#newScore = getGraphScore(G)"""
+	"""for node in G.nodes:
+		print(node.name, "priors:", node.prior)"""
+	printGraphs(G)
+	#newScore = getGraphScore(G)

@@ -1,5 +1,4 @@
-import sys, math, calendar
-from time import strptime
+import sys
 from scipy import cluster
 getn = lambda g,n: g.nodes[nodes.index(n)]
 nodes = ['X','Y','month','day','FFMC','DMC','DC','ISI','temp','RH','wind','rain','area']
@@ -72,7 +71,7 @@ class Graph:
 
 class Node:
 	name = ''
-	parents = {}
+	parents = []
 	values = []
 	prior = []
 	centroids = []
