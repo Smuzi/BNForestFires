@@ -22,8 +22,10 @@ class Graph:
 		for name in nodes:
 			#print(name)
 			self.nodes.append(Node(name))
+		self.updatePriors(self, priorsDict)
+		"""for node in self.nodes:
+			print("INIT:", node.name, "priors:", node.priors, "data:", node.values)"""
 		self.updateQuantizedValues(self, dataDict)
-		self.updatePriors(priorsDict)
 
 
 	def updateQuantizedDict(self, dataDict, dataDict_Q=[]):
@@ -37,17 +39,17 @@ class Graph:
 		return dataDict_Q
 
 	@staticmethod
-	def updateQuantizedValues(self, dataDict):
+	def updatePriors(self, dataDict):
 		for node in self.nodes:
 			#print(node.name)
-			nodeValues = [x[nodes.index(node.name)] for x in dataDict]
-			centroids = getCentroids(nodeValues)
+			nodePriors = [x[nodes.index(node.name)] for x in dataDict]
+			centroids = getCentroids(nodePriors)
 			if(node.name == "rain"):
 				centroids = (0.01, 3.9)
 			node.centroids = centroids
-			closestCentroidToVal = [min(centroids, key=lambda x: abs(x - v)) for v in nodeValues]
-			node.values = [(c, closestCentroidToVal.count(c), float(format(closestCentroidToVal.count(c) / len(nodeValues), '.3f'))) for c in centroids]
-			if len(node.values) < 2:
+			closestCentroidToVal = [min(centroids, key=lambda x: abs(x - v)) for v in nodePriors]
+			node.priors = [(c, closestCentroidToVal.count(c), float(format(closestCentroidToVal.count(c) / len(nodePriors), '.3f'))) for c in centroids]
+			if len(node.priors) < 2:
 				print("Not enough values for node", node.name, "exiting...");
 				sys.exit()
 
@@ -57,12 +59,14 @@ class Graph:
 		else:
 			getn(self,nodeName).addParents([getn(self,p) for p in parents])
 
-	def updatePriors(self, priorsDict):
+	@staticmethod
+	def updateQuantizedValues(self, dataDict):
 		for node in self.nodes:
 			#print(node.name)
-			nodePriors = [x[nodes.index(node.name)] for x in priorsDict]
-			closestCentroidToVal = [min(node.centroids, key=lambda x: abs(x - v)) for v in nodePriors]
-			node.prior = [(c, closestCentroidToVal.count(c), float(format(closestCentroidToVal.count(c) / len(nodePriors), '.3f'))) for c in node.centroids]
+			nodeValues = [x[nodes.index(node.name)] for x in dataDict]
+			closestCentroidToVal = [min(node.centroids, key=lambda x: abs(x - v)) for v in nodeValues]
+			node.values = [(c, closestCentroidToVal.count(c), float(format(closestCentroidToVal.count(c) / len(nodeValues), '.3f'))) for c in node.centroids]
+			#print("updateQuantizedValues:", node.name, "priors:", node.priors, "data:", node.values)
 
 	def removeParentsFromNode(self, nodeName, p):
 		for i in p:
@@ -73,14 +77,14 @@ class Node:
 	name = ''
 	parents = []
 	values = []
-	prior = []
+	priors = []
 	centroids = []
 
 	def __init__(self, name):
 		self.name = name
 		self.parents = set([])
 		self.values = []
-		self.prior = []
+		self.priors = []
 		self.centroids = []
 
 	def addParents(self, n):

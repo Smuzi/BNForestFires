@@ -28,13 +28,12 @@ noParents = lambda n: len(n.parents) == 0
 
 def calculateNoParentNodeScore(node, score):
 	sig_n = sum([x[1] for x in node.values])
-	sig_a = sum([x[1] for x in node.prior])
+	sig_a = sum([x[1] for x in node.priors])
 	#print("calculateNoParentNodeScore:sigma n =", sig_n, "sigma a =" ,sig_a)
 	#print("calculateNoParentNodeScore:gamma", sig_a, "gamma", (sig_a + sig_n))
-	sig_a = 1 if sig_a == 0 else sig_a
 	score += (Decimal(gamma(sig_a)) / Decimal(gamma(sig_a + sig_n))).log10()
-	for i in range(0, len(node.values)):
-		a = node.prior[i][1]
+	for i in range(0, len(node.priors)):
+		a = node.priors[i][1]
 		n = node.values[i][1]
 		#print("a =",a,"n = ",n)
 		a = 1 if a == 0 else a
@@ -47,14 +46,13 @@ def calculateNodeScore(node, parent, score): #for one parent
 	#print(node.name, parent.name)
 	n_i = nodes.index(node.name)
 	p_i = nodes.index(parent.name)
-	for j in parent.values:
+	for j in parent.priors:
 		#print("calculateNodeScore:value = ", j[0], "in", parent.name)
 		sig_n = len([x[n_i] for x in dataDict_Q if x[p_i]==j[0]])
 		sig_a = len([x[n_i] for x in priors_Q if x[p_i]==j[0]])
-		sig_a = 1 if sig_a == 0 else sig_a
 		#print("calculateNodeScore: gamma",(sig_a), "gamma", (sig_a + sig_n))
 		score += (Decimal(gamma(sig_a)) / Decimal(gamma(sig_a + sig_n))).log10()
-		for k in node.values:
+		for k in node.priors:
 			#print("calculateNodeScore:value of node", node.name, "is ", k[0], ", value of parent", parent.name, "is", j[0])
 			n = len([x[n_i] for x in dataDict_Q if x[n_i]==k[0] and x[p_i]==j[0]])
 			a = len([x[n_i] for x in priors_Q if x[n_i]==k[0] and x[p_i]==j[0]])
@@ -84,12 +82,13 @@ def parseAux(rawData, dict):
 		r[3] = (days[r[3]])  # replace months and days to ints
 		dict.append([float(x) for x in r])
 
-def parseData(rawData, priors):
-	rawData = rawData.split('\n')
-	nodes = rawData.pop(0).split(',')
+def parseData(priors, data):
 	rawPriors = priors.split('\n')
-	parseAux(rawData, dataDict)
+	nodes = rawPriors.pop(0).split(',')
+	rawData = data.split('\n')
+	rawData.pop(0)
 	parseAux(rawPriors, priorsDict)
+	parseAux(rawData, dataDict)
 	return (dataDict, priorsDict)
 
 def changeGraph(G):
@@ -111,7 +110,8 @@ def changeGraph(G):
 def printGraphsAux(G):
 	for node in G.nodes:
 		print(node.name, "parents:", [n.name for n in node.parents])
-	print('\nGraph Score = 10^{}'.format(float(getGraphScore(G))))
+
+	print('\nGraph Score = 10^{}'.format(float(format(getGraphScore(G), '.3f'))))
 
 def printGraphs(G):
 	print("\nBEFORE CHANGES:\n")
@@ -122,17 +122,18 @@ def printGraphs(G):
 
 if __name__ == '__main__':
 	if len(sys.argv) < 5:
-		print("usage: program.py dataset.csv priors.csv parents.csv changes.csv")
+		print("usage: program.py priors.csv data.csv  parents.csv changes.csv")
 		sys.exit()
-	data = open(sys.argv[1], "r").read()
-	priors = open(sys.argv[2], "r").read()
+	priors = open(sys.argv[1], "r").read()
+	data = open(sys.argv[2], "r").read()
 	changes = open(sys.argv[4], "r").read()
-	(dataDict, priorsDict) = parseData(data, priors)
+	(dataDict, priorsDict) = parseData(priors, data)
+	#print("dataDict:", dataDict)
 	G = Graph(nodes, dataDict, priorsDict)
 	dataDict_Q = G.updateQuantizedDict(dataDict)
 	priors_Q = G.updateQuantizedDict(priorsDict)
 	createSimpleGraph(G)
 	"""for node in G.nodes:
-		print(node.name, "priors:", node.prior)"""
+		print(node.name, "priors:", node.priors, "data:", node.values)"""
 	printGraphs(G)
 	#newScore = getGraphScore(G)
