@@ -120,6 +120,7 @@ def printGraphs(G):
 	print("\nAFTER CHANGES:\n")
 	printGraphsAux(G)
 
+
 if __name__ == '__main__':
 	if len(sys.argv) < 5:
 		print("usage: program.py priors.csv data.csv  parents.csv changes.csv")
