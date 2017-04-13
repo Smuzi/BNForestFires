@@ -1,0 +1,2 @@
+switch, FFMC, temp
+remove, wind, X, Y

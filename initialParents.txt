@@ -1,0 +1,9 @@
+FFMC, temp, RH, wind, rain
+DMC, temp, RH, rain
+DC, rain, temp
+ISI, FFMC, wind
+area, ISI, DC, DMC
+temp, month
+RH, day
+wind, day, month, X, Y
+rain, month
