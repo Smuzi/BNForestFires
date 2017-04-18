@@ -22,9 +22,98 @@ def get_column_stats(path):
     # plt.plot(x_list)
     # plt.ylabel('bb')
     # plt.show()
+    return df
+
+def turn_month_to_num(month_col):
+    tmp_list = []
+    for val in month_col:
+        if val == 'jan':
+            tmp_list.append(0)
+        elif val == 'feb':
+            tmp_list.append(1)
+        elif val == 'mar':
+            tmp_list.append(2)
+        elif val == 'apr':
+            tmp_list.append(3)
+        elif val == 'may':
+            tmp_list.append(4)
+        elif val == 'jun':
+            tmp_list.append(5)
+        elif val == 'jul':
+            tmp_list.append(6)
+        elif val == 'aug':
+            tmp_list.append(7)
+        elif val == 'sep':
+            tmp_list.append(8)
+        elif val == 'oct':
+            tmp_list.append(9)
+        elif val == 'nov':
+            tmp_list.append(10)
+        elif val == 'dec':
+            tmp_list.append(11)
+    return tmp_list
+
+
+
+def turn_day_to_num(day_col):
+    tmp_list = []
+    for val in day_col:
+        if val == 'sun':
+            tmp_list.append(0)
+        elif val == 'mon':
+            tmp_list.append(1)
+        elif val == 'tue':
+            tmp_list.append(2)
+        elif val == 'wed':
+            tmp_list.append(3)
+        elif val == 'thu':
+            tmp_list.append(4)
+        elif val == 'fri':
+            tmp_list.append(5)
+        elif val == 'sat':
+            tmp_list.append(6)
+    return tmp_list
+
+
+split_size = 5
+def data_to_discrete(data_table, dump=False):
+    print 'turning data to discrete values - each range of values is divided to '+ str(split_size) + ' ranges from 0-'+str(split_size-1)
+    col_names = data_table.columns
+    for col in col_names:
+        if col == 'month'.encode('utf-8'):
+            month_col = data_table[col]
+            month_num_col = turn_month_to_num(month_col)
+            for i, val in enumerate(month_num_col):
+                data_table.set_value(i, col, val)
+        elif col == 'day'.encode('utf-8'):
+            day_col = data_table[col]
+            day_num_col = turn_day_to_num(day_col)
+            for i, val in enumerate(day_num_col):
+                data_table.set_value(i, col, val)
+        elif (col != 'X'.encode('utf-8')) & (col != 'Y'.encode('utf-8')):
+            data_column = data_table[col]
+            col_min = min(data_column)
+            range = max(data_column) - col_min
+            delta = range/split_size
+            #print 'reformatting: '+ str(col)
+            #print data_column
+            for i,val in enumerate(data_column.values):
+                bucket = (val-col_min) // delta            ##needs to be checked
+                #  print 'i:' + str(i) +' '+ str(bucket) +' '+ str (val)
+                data_table.set_value(i, col, int(bucket))
+                # copy_col[i] = int(bucket)
+            # data_table[col] = copy_col
+
+    if dump:
+        print 'writing new table to forest_fires_correct.csv'
+        data_table.to_csv('forest_fires_correct.csv',sep=',',index=False, encoding='utf-8')
+    return data_table
 
 
 if __name__ == '__main__':
     data_path = "./forestfires.csv"
-    get_column_stats(data_path)
+    data_table = get_column_stats(data_path)
+    # print data_table
+    data_table = data_to_discrete(data_table, dump=False)
+    # print data_table
 
