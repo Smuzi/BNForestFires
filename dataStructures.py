@@ -17,7 +17,6 @@ def getCentroids(list):
 
 class Graph:
 	nodes = []
-
 	def __init__(self, nodes, dataDict, priorsDict):
 		for name in nodes:
 			#print(name)
@@ -26,6 +25,30 @@ class Graph:
 		"""for node in self.nodes:
 			print("INIT:", node.name, "priors:", node.priors, "data:", node.values)"""
 		self.updateQuantizedValues(self, dataDict)
+
+	def checkCircle(self): #simple DFS
+		visited = set()
+		path = []
+		path_set = set(path)
+		stack = [iter(self.nodes)]
+		while stack:
+			#print("visited:", [n.name for n in visited], ",path:", [n.name for n in path], ",stack:", stack)
+			for v in stack[-1]:
+				print("v:", v.name)
+				if v in path_set:
+					return True
+				elif v not in visited:
+					visited.add(v)
+					path.append(v)
+					path_set.add(v)
+					stack.append(iter(v.parents))
+					break
+			else:
+				if len(path)==0:
+					return False
+				path_set.remove(path.pop())
+				stack.pop()
+		return False
 
 
 	def updateQuantizedDict(self, dataDict, dataDict_Q=[]):

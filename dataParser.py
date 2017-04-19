@@ -91,6 +91,16 @@ def parseData(priors, data):
 	parseAux(rawData, dataDict)
 	return (dataDict, priorsDict)
 
+def changeGraphAux(firstW, node, line):
+	if firstW == 'add':
+		G.addParentsToNode(node, line)
+	elif firstW == 'remove':
+		G.removeParentsFromNode(node, line)
+	elif firstW == 'switch':
+		G.removeParentsFromNode(node, line)  # only one arg
+		for l in line:
+			G.addParentsToNode(l, node)
+
 def changeGraph(G):
 	with open(sys.argv[4], 'r') as f:
 		changes = list(csv.reader(f))
@@ -98,14 +108,18 @@ def changeGraph(G):
 		line = [c.strip() for c in change]
 		firstW = line.pop(0)
 		node = line.pop(0)
-		if firstW == 'add':
-			G.addParentsToNode(node,line)
-		elif firstW == 'remove':
-			G.removeParentsFromNode(node, line)
-		elif firstW == 'switch':
-			G.removeParentsFromNode(node, line) #only one arg
-			for l in line:
-				G.addParentsToNode(l, node)
+		changeGraphAux(firstW, node, line)
+
+def changeGraphByLine(G):
+	with open(sys.argv[4], 'r') as f:
+		changes = list(csv.reader(f))
+	for change in changes:
+		line = [c.strip() for c in change]
+		firstW = line.pop(0)
+		node = line.pop(0)
+		changeGraphAux(firstW, node, line)
+		print("\nAFTER CHANGE:\n")
+		printGraphsAux(G)
 
 def printGraphsAux(G):
 	for node in G.nodes:
@@ -113,10 +127,14 @@ def printGraphsAux(G):
 
 	print('\nGraph Score = 10^{}'.format(float(format(getGraphScore(G), '.3f'))))
 
-def printGraphs(G):
+def printGraphs(G, eachline = False):
 	print("\nBEFORE CHANGES:\n")
 	printGraphsAux(G)
-	changeGraph(G)
+	if (eachline == True):
+		changeGraphByLine(G)
+		return
+	else:
+		changeGraph(G)
 	print("\nAFTER CHANGES:\n")
 	printGraphsAux(G)
 
@@ -134,7 +152,6 @@ if __name__ == '__main__':
 	dataDict_Q = G.updateQuantizedDict(dataDict)
 	priors_Q = G.updateQuantizedDict(priorsDict)
 	createSimpleGraph(G)
-	"""for node in G.nodes:
-		print(node.name, "priors:", node.priors, "data:", node.values)"""
-	printGraphs(G)
-	#newScore = getGraphScore(G)
+	for node in G.nodes:
+		print(node.name, "priors:", node.priors, "data:", node.values)
+	printGraphs(G, True)
