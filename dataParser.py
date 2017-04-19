@@ -97,7 +97,7 @@ def changeGraphAux(firstW, node, line):
 	elif firstW == 'remove':
 		G.removeParentsFromNode(node, line)
 	elif firstW == 'switch':
-		G.removeParentsFromNode(node, line)  # only one arg
+		G.removeParentsFromNode(node, line)
 		for l in line:
 			G.addParentsToNode(l, node)
 

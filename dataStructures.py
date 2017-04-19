@@ -34,7 +34,7 @@ class Graph:
 		while stack:
 			#print("visited:", [n.name for n in visited], ",path:", [n.name for n in path], ",stack:", stack)
 			for v in stack[-1]:
-				print("v:", v.name)
+				#print("v:", v.name)
 				if v in path_set:
 					return True
 				elif v not in visited:
@@ -77,10 +77,18 @@ class Graph:
 				sys.exit()
 
 	def addParentsToNode(self, nodeName, parents):
+		node = getn(self, nodeName)
 		if type(parents) == str:
-			getn(self, nodeName).addParents([getn(self, parents)])
+			node.addParents([getn(self, parents)])
+			if self.checkCircle() == True:
+				print("\nCircle inserted into graph after", parents, "was inserted!!!\n")
+				self.removeParentsFromNode(nodeName, [parents])
 		else:
-			getn(self,nodeName).addParents([getn(self,p) for p in parents])
+			parentNames = [getn(self,p) for p in parents]
+			node.addParents(parentNames)
+			if self.checkCircle() == True:
+				print("\nCircle inserted into graph after", parents, "was inserted!!!\n")
+				self.removeParentsFromNode(nodeName, parents)
 
 	@staticmethod
 	def updateQuantizedValues(self, dataDict):
