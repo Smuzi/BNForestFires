@@ -1,4 +1,4 @@
-import sys
+import sys,copy
 from scipy import cluster
 getn = lambda g,n: g.nodes[nodes.index(n)]
 nodes = ['X','Y','month','day','FFMC','DMC','DC','ISI','temp','RH','wind','rain','area']
@@ -25,6 +25,15 @@ class Graph:
 		"""for node in self.nodes:
 			print("INIT:", node.name, "priors:", node.priors, "data:", node.values)"""
 		self.updateQuantizedValues(self, dataDict)
+
+	def __deepcopy__(self, memo):
+		cls = self.__class__
+		result = cls.__new__(cls)
+		result.nodes = []
+		memo[id(self)] = result
+		for node in self.nodes:
+			result.nodes.append(copy.deepcopy(node))
+		return result
 
 	def checkCircle(self): #simple DFS
 		visited = set()
@@ -81,13 +90,13 @@ class Graph:
 		if type(parents) == str:
 			node.addParents([getn(self, parents)])
 			if self.checkCircle() == True:
-				print("\nCircle inserted into graph after", parents, "was inserted!!!\n")
+				#print("\nCircle inserted into graph after", parents, "was inserted!!!\n")
 				self.removeParentsFromNode(nodeName, [parents])
 		else:
 			parentNames = [getn(self,p) for p in parents]
 			node.addParents(parentNames)
 			if self.checkCircle() == True:
-				print("\nCircle inserted into graph after", parents, "was inserted!!!\n")
+				#print("Circle inserted into graph after", parents, "was inserted!!!\n")
 				self.removeParentsFromNode(nodeName, parents)
 
 	@staticmethod
@@ -101,6 +110,7 @@ class Graph:
 
 	def removeParentsFromNode(self, nodeName, p):
 		for i in p:
+			#print("in removeParentsFromNode. node: ,i:", nodeName, i)
 			getn(self, nodeName).removeParent(getn(self, i))
 		#print([p.name for p in getn(self, nodeName).parents])
 
@@ -118,6 +128,14 @@ class Node:
 		self.priors = []
 		self.centroids = []
 
+	def __deepcopy__(self, memo):
+		cls = self.__class__
+		result = cls.__new__(cls)
+		memo[id(self)] = result
+		for k, v in self.__dict__.items():
+			setattr(result, k, copy.deepcopy(v, memo))
+		return result
+
 	def addParents(self, n):
 		#print(self.name)
 		#print("parents to add:",  [p.name for p in n])
@@ -125,7 +143,7 @@ class Node:
 			self.parents.add(a)
 
 	def removeParent(self, p):
-		#print("remove from", self.name, "parent:", p.name)
+		#print("remove from", self.name, "parent:", p.name, "current parents are:", [x.name for x in self.parents], "\n")
 		self.parents.remove(p)
 
 	"""def updatePriors(self, prio):

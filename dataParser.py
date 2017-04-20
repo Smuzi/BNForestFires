@@ -1,5 +1,5 @@
 import sys, math
-import csv
+import csv, random, copy
 from time import strptime
 from dataStructures import Graph
 from decimal import Decimal
@@ -13,8 +13,10 @@ dataDict_Q = []
 priorsDict = []
 priors_Q =[]
 
+getn = lambda g,n: g.nodes[nodes.index(n)]
 gamma = lambda x: math.factorial(x-1)
 antilog = lambda x: Decimal(10)**x
+gs = lambda G: float(format(getGraphScore(G), '.3f'))
 
 def createSimpleGraph(G):
 	with open(sys.argv[3], 'r') as f:
@@ -125,9 +127,9 @@ def printGraphsAux(G):
 	for node in G.nodes:
 		print(node.name, "parents:", [n.name for n in node.parents])
 
-	print('\nGraph Score = 10^{}'.format(float(format(getGraphScore(G), '.3f'))))
+	print('Graph Score = 10^{}'.format(gs(G)))
 
-def printGraphs(G, eachline = False):
+def calcScoreByFile(G, eachline):
 	print("\nBEFORE CHANGES:\n")
 	printGraphsAux(G)
 	if (eachline == True):
@@ -138,10 +140,59 @@ def printGraphs(G, eachline = False):
 	print("\nAFTER CHANGES:\n")
 	printGraphsAux(G)
 
+def calcScoreAutoAux(G,maxGraph,currScore):
+	newScore = gs(G)
+	(maxGraph, currScore) = (copy.deepcopy(maxGraph), currScore) if currScore >= newScore else (copy.deepcopy(G), newScore)
+	return (maxGraph, currScore)
+
+ROUNDS = 1
+ITER = 1
+
+def chooseNode(G):
+	[name] = random.sample(nodes,1)
+	node = getn(G, name)
+	while(node.parents == set()):
+		[name] = random.sample(nodes, 1)
+		node = getn(G, name)
+	return node.name, [p.name for p in node.parents]
+
+def calcScoreAuto(G):
+	printGraphsAux(G)
+	(maxGraph, maxScore) = (copy.deepcopy(G),gs(G))
+	print(maxGraph is G)
+	for i in range(0,ROUNDS):
+		for i in range(0, 2*ITER):
+			[node, parent] = random.sample(nodes, 2)
+			G.addParentsToNode(node, parent)
+			(maxGraph, maxScore) = calcScoreAutoAux(G, maxGraph,maxScore)
+			print('Graph Score = 10^{}\n'.format(gs(maxGraph)))
+		for i in range(0, ITER):
+			node, chosenParentList = chooseNode(G)
+			parent = random.sample(chosenParentList,1)
+			G.removeParentsFromNode(node, parent)
+			(maxGraph, maxScore) = calcScoreAutoAux(G, maxGraph, maxScore)
+			print('Graph Score = 10^{}\n'.format(gs(maxGraph)))
+		for i in range(0, ITER):
+			node, chosenParentList = chooseNode(G)
+			parent = random.sample(chosenParentList,1)
+			print(maxScore)
+			G.removeParentsFromNode(node, parent)
+			for p in parent:
+				G.addParentsToNode(p, node)
+			(maxGraph, maxScore) = calcScoreAutoAux(G, maxGraph, maxScore)
+			print('Graph Score = 10^{}\n'.format(gs(maxGraph)))
+	printGraphsAux(maxGraph)
+	return (maxGraph, maxScore)
+
+def chooseGraphChangesInsertion(G, byFile = True, eachline = False):
+	if byFile == True:
+		calcScoreByFile(G, eachline)
+	else:
+		calcScoreAuto(G)
 
 if __name__ == '__main__':
 	if len(sys.argv) < 5:
-		print("usage: program.py priors.csv data.csv  parents.csv changes.csv")
+		print("usage: program.py priors.csv data.csv parents.csv changes.csv")
 		sys.exit()
 	priors = open(sys.argv[1], "r").read()
 	data = open(sys.argv[2], "r").read()
@@ -152,6 +203,6 @@ if __name__ == '__main__':
 	dataDict_Q = G.updateQuantizedDict(dataDict)
 	priors_Q = G.updateQuantizedDict(priorsDict)
 	createSimpleGraph(G)
-	for node in G.nodes:
-		print(node.name, "priors:", node.priors, "data:", node.values)
-	printGraphs(G, True)
+	chooseGraphChangesInsertion(G, False, True)  # 1.by file or by function, 2. by entire file or by line
+	"""for node in G.nodes:
+		print(node.name, "priors:", node.priors, "data:", node.values)"""
