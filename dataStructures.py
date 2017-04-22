@@ -7,12 +7,13 @@ MAXRANGE = 7
 
 def getCentroids(list):
 	minerr = 900000 #is >> from err
-	for k in range(2,MAXRANGE):
+	"""for k in range(2,MAXRANGE):
 		#print("K is", k)
 		(centroids, err) = cluster.vq.kmeans(list, k)
 		#print(k,sorted([int(x) for x in centroids]), err)
 		if err < minerr:
-			minerr = err
+			minerr = err"""
+	(centroids, err) = cluster.vq.kmeans(list, 12)
 	print(sorted([float(format(x,'.2f')) for x in centroids]))
 	return sorted([float(format(x,'.2f')) for x in centroids])
 
