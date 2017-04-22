@@ -80,8 +80,8 @@ def getGraphScore(G, currentScore=0):
 def parseAux(rawData, dict):
 	for row in rawData:
 		r = row.split(',')
-		r[2] = (strptime(r[2], '%b').tm_mon)
-		r[3] = (days[r[3]])  # replace months and days to ints
+		#r[2] = (strptime(r[2], '%b').tm_mon)
+		#r[3] = (days[r[3]])  # replace months and days to ints
 		dict.append([float(x) for x in r])
 
 def parseData(priors, data):
@@ -145,7 +145,7 @@ def calcScoreAutoAux(G,maxGraph,currScore):
 	(maxGraph, currScore) = (copy.deepcopy(maxGraph), currScore) if currScore >= newScore else (copy.deepcopy(G), newScore)
 	return (maxGraph, currScore)
 
-ROUNDS = 1
+ROUNDS = 2
 ITER = 1
 
 def chooseNode(G):
@@ -175,7 +175,6 @@ def calcScoreAuto(G):
 		for i in range(0, ITER):
 			node, chosenParentList = chooseNode(G)
 			parent = random.sample(chosenParentList,1)
-			print(maxScore)
 			G.removeParentsFromNode(node, parent)
 			for p in parent:
 				G.addParentsToNode(p, node)
@@ -198,7 +197,7 @@ if __name__ == '__main__':
 	data = open(sys.argv[2], "r").read()
 	changes = open(sys.argv[4], "r").read()
 	(dataDict, priorsDict) = parseData(priors, data)
-	#print("dataDict:", dataDict)
+	#print("dataDict:", priorsDict)
 	G = Graph(nodes, dataDict, priorsDict)
 	dataDict_Q = G.updateQuantizedDict(dataDict)
 	priors_Q = G.updateQuantizedDict(priorsDict)

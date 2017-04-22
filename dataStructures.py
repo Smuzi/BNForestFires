@@ -13,6 +13,7 @@ def getCentroids(list):
 		#print(k,sorted([int(x) for x in centroids]), err)
 		if err < minerr:
 			minerr = err
+	print(sorted([float(format(x,'.2f')) for x in centroids]))
 	return sorted([float(format(x,'.2f')) for x in centroids])
 
 class Graph:
@@ -78,6 +79,8 @@ class Graph:
 			centroids = getCentroids(nodePriors)
 			if(node.name == "rain"):
 				centroids = (0.01, 3.9)
+			elif(node.name == 'area'):
+				centroids = (0.00, 4.0)
 			node.centroids = centroids
 			closestCentroidToVal = [min(centroids, key=lambda x: abs(x - v)) for v in nodePriors]
 			node.priors = [(c, closestCentroidToVal.count(c), float(format(closestCentroidToVal.count(c) / len(nodePriors), '.3f'))) for c in centroids]
