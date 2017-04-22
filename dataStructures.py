@@ -1,5 +1,6 @@
 import sys,copy
 from scipy import cluster
+from math import floor
 getn = lambda g,n: g.nodes[nodes.index(n)]
 nodes = ['X','Y','month','day','FFMC','DMC','DC','ISI','temp','RH','wind','rain','area']
 
@@ -14,8 +15,8 @@ def getCentroids(list):
 		if err < minerr:
 			minerr = err"""
 	(centroids, err) = cluster.vq.kmeans(list, 12)
-	print(sorted([float(format(x,'.2f')) for x in centroids]))
-	return sorted([float(format(x,'.2f')) for x in centroids])
+	print(sorted([floor(float(format(x,'.2f'))) for x in centroids]))
+	return sorted([floor(float(format(x,'.2f'))) for x in centroids])
 
 class Graph:
 	nodes = []
