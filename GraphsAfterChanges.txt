@@ -1,0 +1,419 @@
+[1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0]
+[2.0, 3.0, 4.0, 5.0, 6.0, 8.0, 9.0]
+[0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0]
+[0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
+[0.0, 2.0, 3.0, 4.0, 5.0]
+[0.0, 1.0, 2.0, 3.0, 4.0]
+[0.0, 1.0, 2.0, 3.0, 4.0]
+[0.0, 1.0, 2.0, 4.0]
+[0.0, 1.0, 2.0, 3.0, 4.0]
+[0.0, 1.0, 2.0, 3.0, 4.0, 5.0]
+[0.0, 1.0, 2.0, 3.0, 4.0]
+[0.0, 1.0, 5.0]
+[0.0, 1.0, 3.0, 5.0]
+['FFMC', 'temp', 'RH', 'wind', 'rain']
+['DMC', 'temp', 'RH', 'rain']
+['DC', 'rain', 'temp']
+['ISI', 'FFMC', 'wind']
+['temp', 'month']
+['RH', 'day']
+['wind', 'day', 'month', 'X', 'Y']
+['rain', 'month']
+['area', 'ISI', 'DC', 'DMC']
+
+BEFORE CHANGES:
+
+X parents: []
+Y parents: []
+month parents: []
+day parents: []
+FFMC parents: ['temp', 'RH', 'wind', 'rain']
+DMC parents: ['temp', 'RH', 'rain']
+DC parents: ['temp', 'rain']
+ISI parents: ['FFMC', 'wind']
+temp parents: ['month']
+RH parents: ['day']
+wind parents: ['month', 'X', 'day', 'Y']
+rain parents: ['month']
+area parents: ['DMC', 'DC', 'ISI']
+Graph Score = 10^-476749250.056
+
+remove from node wind ['X']
+
+AFTER CHANGE:
+
+X parents: []
+Y parents: []
+month parents: []
+day parents: []
+FFMC parents: ['temp', 'RH', 'wind', 'rain']
+DMC parents: ['temp', 'RH', 'rain']
+DC parents: ['temp', 'rain']
+ISI parents: ['FFMC', 'wind']
+temp parents: ['month']
+RH parents: ['day']
+wind parents: ['month', 'day', 'Y']
+rain parents: ['month']
+area parents: ['DMC', 'DC', 'ISI']
+Graph Score = 10^-238374536.444
+
+remove from node wind ['Y']
+
+AFTER CHANGE:
+
+X parents: []
+Y parents: []
+month parents: []
+day parents: []
+FFMC parents: ['temp', 'RH', 'wind', 'rain']
+DMC parents: ['temp', 'RH', 'rain']
+DC parents: ['temp', 'rain']
+ISI parents: ['FFMC', 'wind']
+temp parents: ['month']
+RH parents: ['day']
+wind parents: ['month', 'day']
+rain parents: ['month']
+area parents: ['DMC', 'DC', 'ISI']
+Graph Score = 10^-119187183.565
+
+add to node wind ['X', 'Y']
+
+AFTER CHANGE:
+
+X parents: []
+Y parents: []
+month parents: []
+day parents: []
+FFMC parents: ['temp', 'RH', 'wind', 'rain']
+DMC parents: ['temp', 'RH', 'rain']
+DC parents: ['temp', 'rain']
+ISI parents: ['FFMC', 'wind']
+temp parents: ['month']
+RH parents: ['day']
+wind parents: ['month', 'X', 'day', 'Y']
+rain parents: ['month']
+area parents: ['DMC', 'DC', 'ISI']
+Graph Score = 10^-476749250.056
+
+add to node temp ['X']
+
+AFTER CHANGE:
+
+X parents: []
+Y parents: []
+month parents: []
+day parents: []
+FFMC parents: ['temp', 'RH', 'wind', 'rain']
+DMC parents: ['temp', 'RH', 'rain']
+DC parents: ['temp', 'rain']
+ISI parents: ['FFMC', 'wind']
+temp parents: ['X', 'month']
+RH parents: ['day']
+wind parents: ['month', 'X', 'day', 'Y']
+rain parents: ['month']
+area parents: ['DMC', 'DC', 'ISI']
+Graph Score = 10^-953498573.264
+
+add to node temp ['Y']
+
+AFTER CHANGE:
+
+X parents: []
+Y parents: []
+month parents: []
+day parents: []
+FFMC parents: ['temp', 'RH', 'wind', 'rain']
+DMC parents: ['temp', 'RH', 'rain']
+DC parents: ['temp', 'rain']
+ISI parents: ['FFMC', 'wind']
+temp parents: ['X', 'month', 'Y']
+RH parents: ['day']
+wind parents: ['month', 'X', 'day', 'Y']
+rain parents: ['month']
+area parents: ['DMC', 'DC', 'ISI']
+Graph Score = 10^-1906997496.37
+
+remove from node temp ['X', 'Y']
+
+AFTER CHANGE:
+
+X parents: []
+Y parents: []
+month parents: []
+day parents: []
+FFMC parents: ['temp', 'RH', 'wind', 'rain']
+DMC parents: ['temp', 'RH', 'rain']
+DC parents: ['temp', 'rain']
+ISI parents: ['FFMC', 'wind']
+temp parents: ['month']
+RH parents: ['day']
+wind parents: ['month', 'X', 'day', 'Y']
+rain parents: ['month']
+area parents: ['DMC', 'DC', 'ISI']
+Graph Score = 10^-476749250.056
+
+add to node RH ['X', 'Y']
+
+AFTER CHANGE:
+
+X parents: []
+Y parents: []
+month parents: []
+day parents: []
+FFMC parents: ['temp', 'RH', 'wind', 'rain']
+DMC parents: ['temp', 'RH', 'rain']
+DC parents: ['temp', 'rain']
+ISI parents: ['FFMC', 'wind']
+temp parents: ['month']
+RH parents: ['X', 'day', 'Y']
+wind parents: ['month', 'X', 'day', 'Y']
+rain parents: ['month']
+area parents: ['DMC', 'DC', 'ISI']
+Graph Score = 10^-1906997731.978
+
+remove from node RH ['day']
+
+AFTER CHANGE:
+
+X parents: []
+Y parents: []
+month parents: []
+day parents: []
+FFMC parents: ['temp', 'RH', 'wind', 'rain']
+DMC parents: ['temp', 'RH', 'rain']
+DC parents: ['temp', 'rain']
+ISI parents: ['FFMC', 'wind']
+temp parents: ['month']
+RH parents: ['X', 'Y']
+wind parents: ['month', 'X', 'day', 'Y']
+rain parents: ['month']
+area parents: ['DMC', 'DC', 'ISI']
+Graph Score = 10^-953498718.205
+
+add to node RH ['month']
+
+AFTER CHANGE:
+
+X parents: []
+Y parents: []
+month parents: []
+day parents: []
+FFMC parents: ['temp', 'RH', 'wind', 'rain']
+DMC parents: ['temp', 'RH', 'rain']
+DC parents: ['temp', 'rain']
+ISI parents: ['FFMC', 'wind']
+temp parents: ['month']
+RH parents: ['X', 'month', 'Y']
+wind parents: ['month', 'X', 'day', 'Y']
+rain parents: ['month']
+area parents: ['DMC', 'DC', 'ISI']
+Graph Score = 10^-1906997438.355
+
+add to node DMC ['month']
+
+AFTER CHANGE:
+
+X parents: []
+Y parents: []
+month parents: []
+day parents: []
+FFMC parents: ['temp', 'RH', 'wind', 'rain']
+DMC parents: ['month', 'temp', 'RH', 'rain']
+DC parents: ['temp', 'rain']
+ISI parents: ['FFMC', 'wind']
+temp parents: ['month']
+RH parents: ['X', 'month', 'Y']
+wind parents: ['month', 'X', 'day', 'Y']
+rain parents: ['month']
+area parents: ['DMC', 'DC', 'ISI']
+Graph Score = 10^-3813260742.27
+
+add to node DC ['month']
+
+AFTER CHANGE:
+
+X parents: []
+Y parents: []
+month parents: []
+day parents: []
+FFMC parents: ['temp', 'RH', 'wind', 'rain']
+DMC parents: ['month', 'temp', 'RH', 'rain']
+DC parents: ['temp', 'month', 'rain']
+ISI parents: ['FFMC', 'wind']
+temp parents: ['month']
+RH parents: ['X', 'month', 'Y']
+wind parents: ['month', 'X', 'day', 'Y']
+rain parents: ['month']
+area parents: ['DMC', 'DC', 'ISI']
+Graph Score = 10^-7626364772.02
+
+add to node RH ['day']
+
+AFTER CHANGE:
+
+X parents: []
+Y parents: []
+month parents: []
+day parents: []
+FFMC parents: ['temp', 'RH', 'wind', 'rain']
+DMC parents: ['month', 'temp', 'RH', 'rain']
+DC parents: ['temp', 'month', 'rain']
+ISI parents: ['FFMC', 'wind']
+temp parents: ['month']
+RH parents: ['day', 'X', 'month', 'Y']
+wind parents: ['month', 'X', 'day', 'Y']
+rain parents: ['month']
+area parents: ['DMC', 'DC', 'ISI']
+Graph Score = 10^-15252730113.584
+
+remove from node RH ['day']
+
+AFTER CHANGE:
+
+X parents: []
+Y parents: []
+month parents: []
+day parents: []
+FFMC parents: ['temp', 'RH', 'wind', 'rain']
+DMC parents: ['month', 'temp', 'RH', 'rain']
+DC parents: ['temp', 'month', 'rain']
+ISI parents: ['FFMC', 'wind']
+temp parents: ['month']
+RH parents: ['X', 'month', 'Y']
+wind parents: ['month', 'X', 'day', 'Y']
+rain parents: ['month']
+area parents: ['DMC', 'DC', 'ISI']
+Graph Score = 10^-7626364772.02
+
+remove from node DC ['month']
+
+AFTER CHANGE:
+
+X parents: []
+Y parents: []
+month parents: []
+day parents: []
+FFMC parents: ['temp', 'RH', 'wind', 'rain']
+DMC parents: ['month', 'temp', 'RH', 'rain']
+DC parents: ['temp', 'rain']
+ISI parents: ['FFMC', 'wind']
+temp parents: ['month']
+RH parents: ['X', 'month', 'Y']
+wind parents: ['month', 'X', 'day', 'Y']
+rain parents: ['month']
+area parents: ['DMC', 'DC', 'ISI']
+Graph Score = 10^-3813260742.27
+
+remove from node RH ['month']
+
+AFTER CHANGE:
+
+X parents: []
+Y parents: []
+month parents: []
+day parents: []
+FFMC parents: ['temp', 'RH', 'wind', 'rain']
+DMC parents: ['month', 'temp', 'RH', 'rain']
+DC parents: ['temp', 'rain']
+ISI parents: ['FFMC', 'wind']
+temp parents: ['month']
+RH parents: ['X', 'Y']
+wind parents: ['month', 'X', 'day', 'Y']
+rain parents: ['month']
+area parents: ['DMC', 'DC', 'ISI']
+Graph Score = 10^-1906630370.162
+
+remove from node DMC ['month']
+
+AFTER CHANGE:
+
+X parents: []
+Y parents: []
+month parents: []
+day parents: []
+FFMC parents: ['temp', 'RH', 'wind', 'rain']
+DMC parents: ['temp', 'RH', 'rain']
+DC parents: ['temp', 'rain']
+ISI parents: ['FFMC', 'wind']
+temp parents: ['month']
+RH parents: ['X', 'Y']
+wind parents: ['month', 'X', 'day', 'Y']
+rain parents: ['month']
+area parents: ['DMC', 'DC', 'ISI']
+Graph Score = 10^-953498718.205
+
+add to node RH ['day']
+
+AFTER CHANGE:
+
+X parents: []
+Y parents: []
+month parents: []
+day parents: []
+FFMC parents: ['temp', 'RH', 'wind', 'rain']
+DMC parents: ['temp', 'RH', 'rain']
+DC parents: ['temp', 'rain']
+ISI parents: ['FFMC', 'wind']
+temp parents: ['month']
+RH parents: ['X', 'day', 'Y']
+wind parents: ['month', 'X', 'day', 'Y']
+rain parents: ['month']
+area parents: ['DMC', 'DC', 'ISI']
+Graph Score = 10^-1906997731.978
+
+add to node FFMC ['X', 'Y']
+
+AFTER CHANGE:
+
+X parents: []
+Y parents: []
+month parents: []
+day parents: []
+FFMC parents: ['wind', 'Y', 'rain', 'X', 'temp', 'RH']
+DMC parents: ['temp', 'RH', 'rain']
+DC parents: ['temp', 'rain']
+ISI parents: ['FFMC', 'wind']
+temp parents: ['month']
+RH parents: ['X', 'day', 'Y']
+wind parents: ['month', 'X', 'day', 'Y']
+rain parents: ['month']
+area parents: ['DMC', 'DC', 'ISI']
+Graph Score = 10^-7615272051.434
+
+switch edges FFMC and ['temp']
+
+AFTER CHANGE:
+
+X parents: []
+Y parents: []
+month parents: []
+day parents: []
+FFMC parents: ['wind', 'Y', 'rain', 'X', 'RH']
+DMC parents: ['temp', 'RH', 'rain']
+DC parents: ['temp', 'rain']
+ISI parents: ['FFMC', 'wind']
+temp parents: ['FFMC', 'month']
+RH parents: ['X', 'day', 'Y']
+wind parents: ['month', 'X', 'day', 'Y']
+rain parents: ['month']
+area parents: ['DMC', 'DC', 'ISI']
+Graph Score = 10^-7620144121.337
+
+switch edges wind and ['month']
+
+AFTER CHANGE:
+
+X parents: []
+Y parents: []
+month parents: ['wind']
+day parents: []
+FFMC parents: ['wind', 'Y', 'rain', 'X', 'RH']
+DMC parents: ['temp', 'RH', 'rain']
+DC parents: ['temp', 'rain']
+ISI parents: ['FFMC', 'wind']
+temp parents: ['FFMC', 'month']
+RH parents: ['X', 'day', 'Y']
+wind parents: ['X', 'day', 'Y']
+rain parents: ['month']
+area parents: ['DMC', 'DC', 'ISI']
+Graph Score = 10^-3792980314.606
