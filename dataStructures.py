@@ -13,10 +13,12 @@ def getCentroids(list):
 		(centroids, err) = cluster.vq.kmeans(list, k)
 		#print(k,sorted([int(x) for x in centroids]), err)
 		if err < minerr:
-			minerr = err"""
+			minerr = err
 	(centroids, err) = cluster.vq.kmeans(list, 12)
 	print(sorted([floor(float(format(x,'.2f'))) for x in centroids]))
-	return sorted([floor(float(format(x,'.2f'))) for x in centroids])
+	return sorted([floor(float(format(x,'.2f'))) for x in centroids])"""
+	print([i for i in set(list)])
+	return [i for i in set(list)]
 
 class Graph:
 	nodes = []

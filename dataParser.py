@@ -94,11 +94,15 @@ def parseData(priors, data):
 	return (dataDict, priorsDict)
 
 def changeGraphAux(firstW, node, line):
+	print('')
 	if firstW == 'add':
+		print(firstW, "to node", node, line)
 		G.addParentsToNode(node, line)
 	elif firstW == 'remove':
+		print(firstW, "from node", node, line)
 		G.removeParentsFromNode(node, line)
 	elif firstW == 'switch':
+		print(firstW, "edges", node, "and", line)
 		G.removeParentsFromNode(node, line)
 		for l in line:
 			G.addParentsToNode(l, node)
@@ -142,11 +146,11 @@ def calcScoreByFile(G, eachline):
 
 def calcScoreAutoAux(G,maxGraph,currScore):
 	newScore = gs(G)
-	(maxGraph, currScore) = (copy.deepcopy(maxGraph), currScore) if currScore >= newScore else (copy.deepcopy(G), newScore)
+	(maxGraph, currScore) = (maxGraph, currScore) if currScore >= newScore else (copy.deepcopy(G), newScore)
 	return (maxGraph, currScore)
 
-ROUNDS = 2
-ITER = 1
+ROUNDS = 100
+ITER = 4
 
 def chooseNode(G):
 	[name] = random.sample(nodes,1)
@@ -161,26 +165,29 @@ def calcScoreAuto(G):
 	(maxGraph, maxScore) = (copy.deepcopy(G),gs(G))
 	print(maxGraph is G)
 	for i in range(0,ROUNDS):
+		print(i)
 		for i in range(0, 2*ITER):
 			[node, parent] = random.sample(nodes, 2)
+			while parent in getn(G, node).parents:
+				[node, parent] = random.sample(nodes, 2)
 			G.addParentsToNode(node, parent)
 			(maxGraph, maxScore) = calcScoreAutoAux(G, maxGraph,maxScore)
-			print('Graph Score = 10^{}\n'.format(gs(maxGraph)))
+			print('Add Parent: Graph Score = 10^{}\n'.format(gs(maxGraph)))
 		for i in range(0, ITER):
 			node, chosenParentList = chooseNode(G)
 			parent = random.sample(chosenParentList,1)
 			G.removeParentsFromNode(node, parent)
 			(maxGraph, maxScore) = calcScoreAutoAux(G, maxGraph, maxScore)
-			print('Graph Score = 10^{}\n'.format(gs(maxGraph)))
-		for i in range(0, ITER):
+			print('Remove Parent: Graph Score = 10^{}\n'.format(gs(maxGraph)))
+		"""for i in range(0, 1):
 			node, chosenParentList = chooseNode(G)
 			parent = random.sample(chosenParentList,1)
 			G.removeParentsFromNode(node, parent)
 			for p in parent:
 				G.addParentsToNode(p, node)
 			(maxGraph, maxScore) = calcScoreAutoAux(G, maxGraph, maxScore)
-			print('Graph Score = 10^{}\n'.format(gs(maxGraph)))
-	printGraphsAux(maxGraph)
+			print('Swap Parent: Graph Score = 10^{}\n'.format(maxScore))"""
+		printGraphsAux(maxGraph)
 	return (maxGraph, maxScore)
 
 def chooseGraphChangesInsertion(G, byFile = True, eachline = False):
@@ -202,6 +209,6 @@ if __name__ == '__main__':
 	dataDict_Q = G.updateQuantizedDict(dataDict)
 	priors_Q = G.updateQuantizedDict(priorsDict)
 	createSimpleGraph(G)
-	chooseGraphChangesInsertion(G, False, True)  # 1.by file or by function, 2. by entire file or by line
+	chooseGraphChangesInsertion(G, True, True)  # 1.by file or by function, 2. by entire file or by line
 	"""for node in G.nodes:
 		print(node.name, "priors:", node.priors, "data:", node.values)"""

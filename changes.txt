@@ -1,10 +1,20 @@
-remove, wind, X, Y
-add, temp, X, Y
+remove, wind, X
+remove, wind, Y
+add, wind, X,Y
+add, temp, X
+add, temp, Y
+remove, temp, X, Y
 add, RH, X, Y
 remove, RH, day
 add, RH, month
 add, DMC, month
 add, DC, month
+add, RH, day
+remove, RH, day
+remove, DC, month
+remove, RH, month
+remove, DMC, month
+add, RH, day
 add, FFMC, X, Y
 switch, FFMC, temp
 switch, wind, month
