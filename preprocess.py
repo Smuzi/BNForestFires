@@ -18,11 +18,15 @@ def get_column_stats(path):
             print set(column)
         else:
             print 'min: ' + str(min(column)) + ' max: ' + str(max(column)) + ' mean: ' + str(np.mean(column))
+            # plt.hist(column)
+            # plt.ylabel(str(name)+' distribution')
+            # plt.show()
         print '---'
     # plt.plot(x_list)
     # plt.ylabel('bb')
     # plt.show()
     return df
+#DMC ISI rain area are badly distributed
 
 def turn_month_to_num(month_col):
     tmp_list = []
@@ -80,7 +84,65 @@ def data_to_discrete(data_table, dump=False):
     print 'turning data to discrete values - each range of values is divided to '+ str(split_size) + ' ranges from 0-'+str(split_size-1)
     col_names = data_table.columns
     for col in col_names:
-        if col == 'month'.encode('utf-8'):
+        if col == 'FFMC'.encode('utf-8') or col == 'ISI'.encode('utf-8'):               # mean-(3/2)sigma,mean-sigma/2, mean, mean + sigma/2, rest
+            ffmc_col = data_table[col]
+            sigma = np.sqrt(np.var(ffmc_col))
+            mean = np.mean(ffmc_col)
+            for i,val in enumerate(ffmc_col):
+                real_val = 0
+                if val > mean:
+                    if val > (mean+sigma/2):
+                        real_val = 4
+                    else:
+                        real_val = 3
+                else:
+                    if val < (mean-sigma/2):
+                        if val < (mean-3*sigma/2):
+                            real_val = 0
+                        else:
+                            real_val = 1
+                    else:
+                        real_val = 2
+                data_table.set_value(i, col, real_val)
+        elif col == 'area'.encode('utf-8') or col == 'rain'.encode('utf-8'):
+            area_col = data_table[col]
+            sigma = np.sqrt(np.var([i for i in area_col if i > 0]))
+            mean = np.mean([i for i in area_col if i > 0])
+            for i,val in enumerate(area_col):
+                real_val = 0
+                if val > 0:
+                    if val > mean:
+                        if val > (2*mean):
+                            real_val = 4
+                        else:
+                            real_val = 3
+                    elif val < (mean/2):
+                        real_val = 1
+                    else:
+                        real_val = 2
+                data_table.set_value(i, col, real_val)
+        # elif col == 'ISI'.encode('utf-8'):
+        #     isi_col = data_table[col]
+        #     sigma = np.sqrt(np.var(isi_col))
+        #     mean = np.mean(isi_col)
+        #     print sigma,mean
+        #     exit()
+        #     # for i, val in enumerate(ffmc_col):
+        # elif col == 'rain'.encode('utf-8'):
+        #     rain_col = data_table[col]
+        #     sigma = np.sqrt(np.var(rain_col))
+        #     mean = np.mean(rain_col)
+        #     print mean, sigma
+        #
+        #     sigma = np.sqrt(np.var([i for i in rain_col if i > 0]))
+        #     mean = np.mean([i for i in rain_col if i > 0])
+        #     print mean, sigma
+        #     exit()
+        #     for i,val in enumerate(rain_col):
+        #         real_val = 0
+        #         # if val > 0:
+        #     exit()
+        elif col == 'month'.encode('utf-8'):
             month_col = data_table[col]
             month_num_col = turn_month_to_num(month_col)
             for i, val in enumerate(month_num_col):
@@ -100,18 +162,22 @@ def data_to_discrete(data_table, dump=False):
             for i,val in enumerate(data_column.values):
                 bucket = (val-col_min) // delta            ##needs to be checked
                 #  print 'i:' + str(i) +' '+ str(bucket) +' '+ str (val)
+                if int(bucket) == 5:
+                    bucket = 4
                 data_table.set_value(i, col, int(bucket))
                 # copy_col[i] = int(bucket)
             # data_table[col] = copy_col
-
     if dump:
-        print 'writing new table to forest_fires_correct.csv'
-        data_table.to_csv('forest_fires_correct.csv',sep=',',index=False, encoding='utf-8')
+        print 'writing new table to forest_fires_correct_2.csv'
+        data_table.to_csv('forest_fires_correct_2.csv', sep=',', index=False, encoding='utf-8')
     return data_table
 
 
 if __name__ == '__main__':
     data_path = "./forestfires.csv"
+    latest_path = "./forest_fires_correct_2.csv"
+    # data_table = get_column_stats(latest_path)
+    # exit()
     data_table = get_column_stats(data_path)
     # print data_table
     data_table = data_to_discrete(data_table, dump=False)
