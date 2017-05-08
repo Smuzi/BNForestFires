@@ -13,7 +13,7 @@ from collections import Counter
 
 
 def create_cpt(node_name,num_of_values, parents_name, parents_num_of_values):
-    path = 'forest_fires_correct.csv'
+    path = 'forest_fires_correct_2.csv'
     data_table = pandas.read_csv(path, encoding='utf-8')
     example_number = data_table.shape[0]
     # print example_number
