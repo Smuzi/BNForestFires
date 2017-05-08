@@ -62,3 +62,4 @@ def create_cpt(node_name,num_of_values, parents_name, parents_num_of_values):
 if __name__ == '__main__':
 
     create_cpt('RH', 5, ['day'], [7])  # needs further checking with more than 1 parent
+    # create_cpt('RH', 5, ['day'], [7])  # needs further checking with more than 1 parent

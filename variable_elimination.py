@@ -120,3 +120,4 @@ if __name__ == '__main__':
     print 'total time: ' + str(time.clock()-start_time)
     # results = variable_elimination(all_nodes, all_parents, node_value_count, RH_set=4, temp_set=4)
     # print "RH=" + str(4) + " temp=" + str(4) + " burned_area:" + str(results)
+    # print "RH=" + str(4) + " temp=" + str(4) + " burned_area:" + str(results)
