@@ -1,6 +1,10 @@
 import numpy as np
 import time
 from cpt_maker import create_cpt
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import pandas
+
 
 # query: P(area|temp=t,RH=h)
 # node_list: [node1,node2..], parents_list [[node1_parent1,node1_parent2..],[..],..]
@@ -103,6 +107,46 @@ def variable_elimination(node_list, parents_list,node_vals,RH_set=0,temp_set=0):
     # print 'time taken: ' + str(time.clock()-start_time)
     return area_probability
 
+
+def plot_results(fire_size_var=0,dump=False):
+    results_list = []
+    with open('variable_elimination_results.txt', 'r') as f:
+        split_rows = map(lambda line: line.split(' '), f.readlines())
+        for line in split_rows:
+            current_res = {}
+            current_res[0] = line[3]
+            current_res[1] = line[4]
+            current_res[2] = line[5]
+            current_res[3] = line[6]
+            current_res[4] = line[7]
+            results_list.append(current_res)
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    xpos_rh = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4]
+    ypos_temp = [0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4]
+    zpos = np.zeros_like(xpos_rh)
+    dx = dy = [0.5 for i in range(25)]
+    dz = []
+    for i in range(5):
+        for j in range(5):
+            current_index = i*5+j
+            prob = (results_list[current_index])[fire_size_var]
+            # print prob
+            dz.append(float(prob))
+            # dz.append(current_index)
+
+    ax.bar3d(xpos_rh, ypos_temp, zpos, dx, dy, dz, color=['b', 'g', 'y', 'r', 'c']*5, zsort='average')
+    plt.xlabel('humidity indicator')
+    plt.ylabel('temperature indicator')
+    if dump:
+        plt.savefig('VE_res_'+str(fire_size_var)+'.png')
+    plt.show()
+
+def generate_graphs(dump=False):
+    for i in range(5):
+        plot_results(i, dump)
+
 if __name__ == '__main__':
     all_nodes = ['X', 'Y', 'month', 'day', 'FFMC', 'DMC', 'DC', 'ISI', 'temp', 'RH', 'wind', 'rain', 'area']
     all_parents = [[], [], [], [], ['temp', 'RH', 'wind', 'rain'], ['temp', 'RH', 'rain'], ['temp', 'rain'],
@@ -110,14 +154,14 @@ if __name__ == '__main__':
 
     node_value_count = {'X':10, 'Y':10, 'month':12, 'day':7, 'FFMC':5, 'DMC':5, 'DC':5, 'ISI':5, 'temp':5, 'RH':5, 'wind':5, 'rain':5, 'area':5}
     start_time = time.clock()
-    print "Variable elimination process:"
-    elimination_order = ['day', 'month', 'rain', 'wind', 'FFMC', 'DMC', 'DC', 'ISI']
-    print 'node elimination order:' + str(elimination_order)
-    for i in range(5):
-        for j in range(5):
-            results = variable_elimination(all_nodes, all_parents, node_value_count,RH_set=i,temp_set=j)
-            print "RH=" + str(i) + " temp=" + str(j) + " burned_area:" + str(results)
+    # print "Variable elimination process:"
+    # elimination_order = ['day', 'month', 'rain', 'wind', 'FFMC', 'DMC', 'DC', 'ISI']
+    # print 'node elimination order:' + str(elimination_order)
+    # for i in range(5):
+    #     for j in range(5):
+    #         results = variable_elimination(all_nodes, all_parents, node_value_count,RH_set=i,temp_set=j)
+    #         print "RH=" + str(i) + " temp=" + str(j) + " burned_area:" + str(results)
+
+    # generate_graphs(dump=False)
     print 'total time: ' + str(time.clock()-start_time)
-    # results = variable_elimination(all_nodes, all_parents, node_value_count, RH_set=4, temp_set=4)
-    # print "RH=" + str(4) + " temp=" + str(4) + " burned_area:" + str(results)
-    # print "RH=" + str(4) + " temp=" + str(4) + " burned_area:" + str(results)
+
