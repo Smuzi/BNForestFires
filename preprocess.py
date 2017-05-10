@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 nodes = ['X','Y','month','day','FFMC','DMC','DC','ISI','temp','RH','wind','rain','area']
 
 def get_column_stats(path):
-    print 'parsing forestfires.csv:'
+    print 'parsing forestfires_correct_2.csv:'
     start_time = time.clock()
     df = pandas.read_csv(path,encoding='utf-8')
     col_names = df.columns
@@ -18,9 +18,9 @@ def get_column_stats(path):
             print set(column)
         else:
             print 'min: ' + str(min(column)) + ' max: ' + str(max(column)) + ' mean: ' + str(np.mean(column))
-            # plt.hist(column)
-            # plt.ylabel(str(name)+' distribution')
-            # plt.show()
+            plt.hist(column)
+            plt.ylabel(str(name)+' distribution')
+            plt.show()
         print '---'
     # plt.plot(x_list)
     # plt.ylabel('bb')
@@ -180,7 +180,7 @@ if __name__ == '__main__':
     # exit()
     data_table = get_column_stats(data_path)
     # print data_table
-    data_table = data_to_discrete(data_table, dump=False)
+    # data_table = data_to_discrete(data_table, dump=False)
     # print data_table
     # print data_table
 
