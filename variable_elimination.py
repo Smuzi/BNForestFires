@@ -110,8 +110,8 @@ def variable_elimination(node_list, parents_list,node_vals,RH_set=0,temp_set=0):
 
 def plot_results(fire_size_var=0,dump=False):
     results_list = []
-    path = 'variable_elimination_results.txt'
-    # path = 'forward_sampling_results.txt'
+    # path = 'variable_elimination_results.txt'
+    path = 'forward_sampling_results.txt'
     with open(path, 'r') as f:
         split_rows = map(lambda line: line.split(' '), f.readlines())
         for line in split_rows:
@@ -164,6 +164,9 @@ if __name__ == '__main__':
     #         results = variable_elimination(all_nodes, all_parents, node_value_count,RH_set=i,temp_set=j)
     #         print "RH=" + str(i) + " temp=" + str(j) + " burned_area:" + str(results)
 
-    # generate_graphs(dump=False)
+    # t = [0.00489993, 0.00451682, 0.00106824, 0.0007379, 0.00044042]
+    # print [x/float(sum(t)) for x in t]
+
+    generate_graphs(dump=False)
     print 'total time: ' + str(time.clock()-start_time)
 

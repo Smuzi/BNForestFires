@@ -1,13 +1,9 @@
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-import numpy as np
-import pandas
 import time
 from cpt_maker import *
 
 
-def forward_sampling(area_set=0, RH_set=0,temp_set=0):
-    nodes = ['X', 'Y', 'month',` 'day', 'FFMC', 'DMC', 'DC', 'ISI', 'temp', 'RH', 'wind', 'rain', 'area']
+def forward_sampling(RH_set=0,temp_set=0):
+    nodes = ['X', 'Y', 'month', 'day', 'FFMC', 'DMC', 'DC', 'ISI', 'temp', 'RH', 'wind', 'rain', 'area']
     all_parents = [[], [], [], [], ['temp', 'RH', 'wind', 'rain'], ['temp', 'RH', 'rain'], ['temp', 'rain'],
                    ['FFMC', 'wind'], ['month'], ['day'], ['month', 'day'], ['month'], ['DMC', 'DC', 'ISI']]
     node_vals = {'X': 10, 'Y': 10, 'month': 12, 'day': 7, 'FFMC': 5, 'DMC': 5, 'DC': 5, 'ISI': 5, 'temp': 5,
@@ -109,13 +105,10 @@ if __name__ == '__main__':
     answers = []
     for rh in range(5):
         for temp in range(5):
-            res = forward_sampling()
+            res = forward_sampling(RH_set=rh, temp_set=temp)
             answers.append(res)
-            print 'RH=' + str(rh) + ' temp=' + str(temp) + ': ' + str(res[6])
-
-
-
-
+            temp_res = [x/float(sum(res[6])) for x in res[6]]
+            print 'RH=' + str(rh) + ' temp=' + str(temp) + ': ' + str(temp_res)
     print 'time: ' + str(time.clock()-start_time)
     # fig = plt.figure()
     # ax = fig.add_subplot(111, projection='3d')
