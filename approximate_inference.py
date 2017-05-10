@@ -19,7 +19,7 @@ def forward_sampling(RH_set=0,temp_set=0):
 
     sum_result = np.zeros(5)
     result_over_time = np.zeros((7, 5))     # 7 points to check results for convergence
-    size = 10001
+    size = 100000
     for i in range(size):
         w = 1
         day_cpt = cpt_list[nodes.index('day')]
@@ -90,9 +90,9 @@ def forward_sampling(RH_set=0,temp_set=0):
             result_over_time[3, :] = sum_result / float(500)
         elif i == 1000:
             result_over_time[4, :] = sum_result / float(1000)
-        elif i == 5000:
-            result_over_time[5, :] = sum_result / float(5000)
-    result_over_time[6, :] = sum_result / float(10000)
+        elif i == 10000:
+            result_over_time[5, :] = sum_result / float(10000)
+    result_over_time[6, :] = sum_result / float(100000)
     return result_over_time
 
 
@@ -109,13 +109,14 @@ def plot_convergence(RH_set, temp_set, area_set):
 
 if __name__ == '__main__':
     start_time = time.clock()
-    # answers = []
-    # for rh in range(5):
-    #     for temp in range(5):
-    #         res = forward_sampling(RH_set=rh, temp_set=temp)
-    #         answers.append(res)
-    #         temp_res = [x/float(sum(res[6])) for x in res[6]]
-    #         print 'RH=' + str(rh) + ' temp=' + str(temp) + ': ' + str(temp_res)
+    answers = []
+    for rh in range(5):
+        for temp in range(5):
+            res = forward_sampling(RH_set=rh, temp_set=temp)
+            answers.append(res)
+            temp_res = [x/float(sum(res[6])) for x in res[6]]
+            print 'RH=' + str(rh) + ' temp=' + str(temp) + ': ' + str(temp_res)
+            exit()
 
     # plot_convergence(RH_set=3,temp_set=3,area_set=1)
     print 'time: ' + str(time.clock()-start_time)
