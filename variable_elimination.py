@@ -110,7 +110,9 @@ def variable_elimination(node_list, parents_list,node_vals,RH_set=0,temp_set=0):
 
 def plot_results(fire_size_var=0,dump=False):
     results_list = []
-    with open('variable_elimination_results.txt', 'r') as f:
+    path = 'variable_elimination_results.txt'
+    # path = 'forward_sampling_results.txt'
+    with open(path, 'r') as f:
         split_rows = map(lambda line: line.split(' '), f.readlines())
         for line in split_rows:
             current_res = {}
